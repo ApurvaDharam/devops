@@ -1,8 +1,8 @@
 pipeline {
   agent any
   tools {
-    maven 'Maven 3'    // name you assign in Global Tool Config
-    jdk 'JDK21'   // name you assign for JDK 17
+    maven 'Maven 3'    
+    jdk 'JDK21'   
   }
   stages {
     stage('Checkout') {
@@ -34,7 +34,6 @@ pipeline {
         withCredentials([sshUserPrivateKey(credentialsId: 'deploy-key', keyFileVariable: 'SSH_KEY')]) {
           sh 'scp -i $SSH_KEY target/*.jar deployuser@yourserver:/opt/apps/'
         }
-        // OR: run your deploy script: sh './deploy/deploy-to-prod.sh'
       }
     }
   }
