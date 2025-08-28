@@ -1,29 +1,27 @@
-pipeline {
-    agent any
-    tools {
-        jdk 'JDK21'
-        maven 'Maven 3'
+node {
+    stage('Build') {
+        withEnv([
+            "JAVA_HOME=${tool 'JDK21'}",
+            "PATH+JAVA=${tool 'JDK21'}/bin",
+            "PATH+MAVEN=${tool 'Maven 3'}/bin"
+        ]) {
+            sh 'mvn clean package'
+        }
     }
-    stages {
-        stage('Build') {
-            steps {
-                sh 'mvn clean package'
-            }
+
+    stage('Test') {
+        withEnv([
+            "JAVA_HOME=${tool 'JDK21'}",
+            "PATH+JAVA=${tool 'JDK21'}/bin",
+            "PATH+MAVEN=${tool 'Maven 3'}/bin"
+        ]) {
+            sh 'mvn test'
         }
-        stage('Test') {
-            steps {
-                sh 'mvn test'
-            }
-            post {
-                always {
-                    junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
-                }
-            }
-        }
-        stage('Archive') {
-            steps {
-                archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
-            }
-        }
+        // even if no test results, don't fail
+        junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
+    }
+
+    stage('Archive') {
+        archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
     }
 }
