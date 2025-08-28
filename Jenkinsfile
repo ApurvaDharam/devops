@@ -17,7 +17,6 @@ node {
         ]) {
             sh 'mvn test'
         }
-        // even if no test results, don't fail
         junit allowEmptyResults: true, testResults: '**/target/surefire-reports/*.xml'
     }
 
