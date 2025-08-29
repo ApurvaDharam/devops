@@ -1,2 +1,2 @@
 # devops
-devops lab - jenkins
+This is a maven jenkins project. 
